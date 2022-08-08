@@ -33,30 +33,30 @@ commonLabels: {}
 defaultRules:
   create: true
   rules:
-    alertmanager: false
+    alertmanager: true
     etcd: false
     configReloaders: false
-    general: false
-    k8s: false
-    kubeApiserverAvailability: false
-    kubeApiserverBurnrate: false
-    kubeApiserverHistogram: false
-    kubeApiserverSlos: false
-    kubelet: false
+    general: true
+    k8s: true
+    kubeApiserverAvailability: true
+    kubeApiserverBurnrate: true
+    kubeApiserverHistogram: true
+    kubeApiserverSlos: true
+    kubelet: true
     kubeProxy: false
-    kubePrometheusGeneral: false
-    kubePrometheusNodeRecording: false
-    kubernetesApps: false
-    kubernetesResources: false
-    kubernetesStorage: false
-    kubernetesSystem: false
-    kubeScheduler: false
+    kubePrometheusGeneral: true
+    kubePrometheusNodeRecording: true
+    kubernetesApps: true
+    kubernetesResources: true
+    kubernetesStorage: true
+    kubernetesSystem: true
+    kubeScheduler: true
     kubeStateMetrics: true
-    network: false
+    network: true
     node: true
-    nodeExporterAlerting: false
-    nodeExporterRecording: false
-    prometheus: true
+    nodeExporterAlerting: true
+    nodeExporterRecording: true
+    prometheus: false
     prometheusOperator: false
 
   ## Reduce app namespace alert scope
@@ -405,7 +405,7 @@ alertmanager:
     ## Scrape interval. If not set, the Prometheus default scrape interval is used.
     ##
     interval: ""
-    selfMonitor: true
+    selfMonitor: false
 
     ## proxyUrl: URL of a proxy that should be used for scraping.
     ##
@@ -699,7 +699,7 @@ alertmanager:
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
-  enabled: false
+  enabled: true
 
   namespaceOverride: "pf9-monitoring"
 
@@ -720,7 +720,7 @@ grafana:
   ##
   defaultDashboardsTimezone: utc
 
-  adminPassword: prom-operator
+  adminPassword: admin
 
   rbac:
     ## If true, Grafana PSPs will be created
@@ -847,7 +847,7 @@ grafana:
     # If true, a ServiceMonitor CRD is created for a prometheus operator
     # https://github.com/coreos/prometheus-operator
     #
-    enabled: true
+    enabled: false
 
     # Path to use for scraping metrics. Might be different if server.root_url is set
     # in grafana.ini
@@ -1467,7 +1467,7 @@ kubeProxy:
 ## Component scraping kube state metrics
 ##
 kubeStateMetrics:
-  enabled: false
+  enabled: true
 
 ## Configuration for kube-state-metrics subchart
 ##
@@ -1521,7 +1521,7 @@ kube-state-metrics:
 ## Deploy node exporter as a daemonset to all nodes
 ##
 nodeExporter:
-  enabled: false
+  enabled: true
 
 ## Configuration for prometheus-node-exporter subchart
 ##
@@ -2221,7 +2221,7 @@ prometheus:
     ## Scrape interval. If not set, the Prometheus default scrape interval is used.
     ##
     interval: ""
-    selfMonitor: true
+    selfMonitor: false
 
     ## scheme: HTTP scheme to use for scraping. Can be used with `tlsConfig` for example if using istio mTLS.
     scheme: ""
