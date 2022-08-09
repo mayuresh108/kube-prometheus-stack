@@ -703,6 +703,40 @@ grafana:
 
   namespaceOverride: "pf9-monitoring"
 
+  dashboards:
+      default:
+        explorer:
+          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-cluster-explorer
+          token: ''
+        events:
+          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-events
+          token: ''
+        kubernetes:
+          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-kubernetes
+          token: ''
+        memusage:
+          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-memusage
+          token: ''
+        node-exporter:
+          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-node-exporter
+          token: ''
+        pvc:
+          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-pvc
+          token: ''
+
+  dashboardProviders:
+     dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
   forceDeployDatasources: false
