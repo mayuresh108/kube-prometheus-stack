@@ -703,6 +703,14 @@ grafana:
 
   namespaceOverride: "pf9-monitoring"
 
+  # persistence:
+  #   type: pvc
+  #   enabled: true
+  #   storageClassName: default
+  #   accessModes:
+  #     - ReadWriteOnce
+  #   size: 1Gi
+
   dashboards:
       default:
         explorer:
@@ -2619,13 +2627,14 @@ prometheus:
     storageSpec: {}
     ## Using PersistentVolumeClaim
     ##
-    #  volumeClaimTemplate:
-    #    spec:
-    #      storageClassName: gluster
-    #      accessModes: ["ReadWriteOnce"]
-    #      resources:
-    #        requests:
-    #          storage: 50Gi
+    # storageSpec:
+    #   volumeClaimTemplate:
+    #     spec:
+    #       storageClassName: default
+    #       accessModes: ["ReadWriteOnce"]
+    #       resources:
+    #         requests:
+    #           storage: 1Gi
     #    selector: {}
 
     ## Using tmpfs volume
