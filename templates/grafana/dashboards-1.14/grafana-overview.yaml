@@ -441,21 +441,21 @@ data:
                 "targets": [
                     {
                         "exemplar": true,
-                        "expr": "histogram_quantile(0.99, sum(irate(grafana_http_request_duration_seconds_bucket{instance=~\"$instance\", job=~\"$job\"}[$__rate_interval])) by (le)) * 1",
+                        "expr": "histogram_quantile(0.99, sum(irate(grafana_http_request_duration_seconds_bucket{instance=~\"$instance\", job=~\"$job\"}[5m])) by (le)) * 1",
                         "interval": "",
                         "legendFormat": "99th Percentile",
                         "refId": "A"
                     },
                     {
                         "exemplar": true,
-                        "expr": "histogram_quantile(0.50, sum(irate(grafana_http_request_duration_seconds_bucket{instance=~\"$instance\", job=~\"$job\"}[$__rate_interval])) by (le)) * 1",
+                        "expr": "histogram_quantile(0.50, sum(irate(grafana_http_request_duration_seconds_bucket{instance=~\"$instance\", job=~\"$job\"}[5m])) by (le)) * 1",
                         "interval": "",
                         "legendFormat": "50th Percentile",
                         "refId": "B"
                     },
                     {
                         "exemplar": true,
-                        "expr": "sum(irate(grafana_http_request_duration_seconds_sum{instance=~\"$instance\", job=~\"$job\"}[$__rate_interval])) * 1 / sum(irate(grafana_http_request_duration_seconds_count{instance=~\"$instance\", job=~\"$job\"}[$__rate_interval]))",
+                        "expr": "sum(irate(grafana_http_request_duration_seconds_sum{instance=~\"$instance\", job=~\"$job\"}[5m])) * 1 / sum(irate(grafana_http_request_duration_seconds_count{instance=~\"$instance\", job=~\"$job\"}[5m]))",
                         "interval": "",
                         "legendFormat": "Average",
                         "refId": "C"

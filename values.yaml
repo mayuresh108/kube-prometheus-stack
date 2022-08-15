@@ -170,41 +170,20 @@ alertmanager:
   config:
     global:
       resolve_timeout: 5m
-    inhibit_rules:
-      - source_matchers:
-          - 'severity = critical'
-        target_matchers:
-          - 'severity =~ warning|info'
-        equal:
-          - 'namespace'
-          - 'alertname'
-      - source_matchers:
-          - 'severity = warning'
-        target_matchers:
-          - 'severity = info'
-        equal:
-          - 'namespace'
-          - 'alertname'
-      - source_matchers:
-          - 'alertname = InfoInhibitor'
-        target_matchers:
-          - 'severity = info'
-        equal:
-          - 'namespace'
     route:
-      group_by: ['namespace']
+      group_by: ['...']
       group_wait: 30s
       group_interval: 5m
-      repeat_interval: 12h
-      receiver: 'null'
-      routes:
-      - receiver: 'null'
-        matchers:
-          - alertname =~ "InfoInhibitor|Watchdog"
+      repeat_interval: 5m
+      receiver: 'default'
     receivers:
-    - name: 'null'
-    templates:
-    - '/etc/alertmanager/config/*.tmpl'
+    - name: 'default'
+      # slack_configs:
+      #   - api_url: https://hooks.slack.com/services/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
+      #     channel: '#alertmgr'
+      #     text: "{{ .CommonAnnotations.description }}"
+      #     title: "{{ .CommonLabels.alertname }}-{{ .CommonAnnotations.summary }}"
+
 
   ## Pass the Alertmanager configuration directives through Helm's templating
   ## engine. If the Alertmanager configuration contains Alertmanager templates,
@@ -702,6 +681,30 @@ grafana:
   enabled: true
 
   namespaceOverride: "pf9-monitoring"
+  # ------------------------------------ PF9 Customizations -------------------------------------
+  grafana.ini:
+    paths:
+      data: /var/lib/grafana/
+      logs: /var/log/grafana
+      plugins: /var/lib/grafana/plugins
+      provisioning: /etc/grafana/provisioning
+    analytics:
+      check_for_updates: true
+    log:
+      mode: console
+    grafana_net:
+      url: https://grafana.net
+    # auth.google:
+    #   enabled: true
+    #   client_id: CLIENT_ID
+    #   client_secret: CLIENT_SECRET
+    #   scopes: https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email
+    #   auth_url: https://accounts.google.com/o/oauth2/auth
+    #   token_url: https://accounts.google.com/o/oauth2/token
+    #   allowed_domains: mycompany.com mycompany.org
+    #   allow_sign_up: true
+    # server:
+    #   root_url: http://grafana.pmk.cluster
 
   # persistence:
   #   type: pvc
@@ -715,9 +718,6 @@ grafana:
       default:
         explorer:
           url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-cluster-explorer
-          token: ''
-        events:
-          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-events
           token: ''
         kubernetes:
           url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-kubernetes
@@ -744,6 +744,7 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/default
+  # ------------------------------------ PF9 Customizations -------------------------------------
 
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
@@ -884,6 +885,7 @@ grafana:
   ##
   service:
     portName: http-web
+    type: NodePort
 
   serviceMonitor:
     # If true, a ServiceMonitor CRD is created for a prometheus operator
@@ -918,6 +920,19 @@ grafana:
     #   targetLabel: nodename
     #   replacement: $1
     #   action: replace
+
+events:
+  enabled: true
+  port: 8080
+  portName: web
+  labels: "mon-helper"
+  dashboardEnabled: true
+
+  namespaceOverride: "pf9-monitoring"
+  serviceMonitor:
+    interval: ""
+    selfMonitor: true
+
 
 ## Component scraping the kube api server
 ##
@@ -2660,56 +2675,61 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
-    # - job_name: kube-etcd
-    #   kubernetes_sd_configs:
-    #     - role: node
-    #   scheme: https
-    #   tls_config:
-    #     ca_file:   /etc/prometheus/secrets/etcd-client-cert/etcd-ca
-    #     cert_file: /etc/prometheus/secrets/etcd-client-cert/etcd-client
-    #     key_file:  /etc/prometheus/secrets/etcd-client-cert/etcd-client-key
-    #   relabel_configs:
-    #   - action: labelmap
-    #     regex: __meta_kubernetes_node_label_(.+)
-    #   - source_labels: [__address__]
-    #     action: replace
-    #     targetLabel: __address__
-    #     regex: ([^:;]+):(\d+)
-    #     replacement: ${1}:2379
-    #   - source_labels: [__meta_kubernetes_node_name]
-    #     action: keep
-    #     regex: .*mst.*
-    #   - source_labels: [__meta_kubernetes_node_name]
-    #     action: replace
-    #     targetLabel: node
-    #     regex: (.*)
-    #     replacement: ${1}
-    #   metric_relabel_configs:
-    #   - regex: (kubernetes_io_hostname|failure_domain_beta_kubernetes_io_region|beta_kubernetes_io_os|beta_kubernetes_io_arch|beta_kubernetes_io_instance_type|failure_domain_beta_kubernetes_io_zone)
-    #     action: labeldrop
-    #
-    ## If scrape config contains a repetitive section, you may want to use a template.
-    ## In the following example, you can see how to define `gce_sd_configs` for multiple zones
-    # additionalScrapeConfigs: |
-    #  - job_name: "node-exporter"
-    #    gce_sd_configs:
-    #    {{range $zone := .Values.gcp_zones}}
-    #    - project: "project1"
-    #      zone: "{{$zone}}"
-    #      port: 9100
-    #    {{end}}
-    #    relabel_configs:
-    #    ...
+    additionalScrapeConfigs:
+    - job_name: kubelet
+      scrape_interval: 5m
+      honor_labels: false
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - source_labels: [__meta_kubernetes_node_name]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: /metrics
+    - job_name: cadvisor
+      scrape_interval: 2m
+      honor_labels: false
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - source_labels: [__meta_kubernetes_node_name]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: /metrics/cadvisor
+    - job_name: apiserver
+      scrape_interval: 5m
+      honor_labels: false
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kubernetes_sd_configs:
+      - role: endpoints
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: default;kubernetes;https
 
 
     ## If additional scrape configurations are already deployed in a single secret file you can use this section.
     ## Expected values are the secret name and key
     ## Cannot be used with additionalScrapeConfigs
-    additionalScrapeConfigsSecret:
-      enabled: true
-      name: additional-scrape-config
-      key: additional-scrape-config.yaml
+    additionalScrapeConfigsSecret: {}
+      # enabled: 
+      # name: 
+      # key: 
 
     ## additionalPrometheusSecretsAnnotations allows to add annotations to the kubernetes secret. This can be useful
     ## when deploying via spinnaker to disable versioning on the secret, strategy.spinnaker.io/versioned: 'false'

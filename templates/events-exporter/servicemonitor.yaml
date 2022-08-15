@@ -1,0 +1,23 @@
+{{- if and .Values.events.enabled .Values.events.serviceMonitor.selfMonitor }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "kube-prometheus-stack.fullname" . }}-monhelper
+  namespace: {{ .Values.events.namespaceOverride }}
+  labels:
+    app: {{ template "kube-prometheus-stack.name" . }}-monhelper
+{{ include "kube-prometheus-stack.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "kube-prometheus-stack.name" . }}-monhelper
+      release: {{ $.Release.Name | quote }}
+  namespaceSelector:
+    matchNames:
+      - {{ printf "%s" (include "kube-prometheus-stack.namespace" .) | quote }}
+  endpoints:
+  - port: {{ .Values.events.portName }}
+    {{- if .Values.events.serviceMonitor.interval }}
+    interval: {{ .Values.events.serviceMonitor.interval }}
+    {{- end }}
+{{- end }}

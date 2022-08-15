@@ -214,7 +214,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(increase(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\"}[$__rate_interval])) by (container) /sum(increase(container_cpu_cfs_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\"}[$__rate_interval])) by (container)",
+                                "expr": "sum(increase(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\"}[5m])) by (container) /sum(increase(container_cpu_cfs_periods_total{namespace=\"$namespace\", pod=\"$pod\", container!=\"\"}[5m])) by (container)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}container{{`}}`}}",
@@ -1094,7 +1094,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(irate(container_network_receive_bytes_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])) by (pod)",
+                                "expr": "sum(irate(container_network_receive_bytes_total{namespace=\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}pod{{`}}`}}",
@@ -1183,7 +1183,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(irate(container_network_transmit_bytes_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])) by (pod)",
+                                "expr": "sum(irate(container_network_transmit_bytes_total{namespace=\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}pod{{`}}`}}",
@@ -1284,7 +1284,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(irate(container_network_receive_packets_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])) by (pod)",
+                                "expr": "sum(irate(container_network_receive_packets_total{namespace=\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}pod{{`}}`}}",
@@ -1373,7 +1373,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(irate(container_network_transmit_packets_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])) by (pod)",
+                                "expr": "sum(irate(container_network_transmit_packets_total{namespace=\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}pod{{`}}`}}",
@@ -1474,7 +1474,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(irate(container_network_receive_packets_dropped_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])) by (pod)",
+                                "expr": "sum(irate(container_network_receive_packets_dropped_total{namespace=\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}pod{{`}}`}}",
@@ -1563,7 +1563,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum(irate(container_network_transmit_packets_dropped_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])) by (pod)",
+                                "expr": "sum(irate(container_network_transmit_packets_dropped_total{namespace=\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}pod{{`}}`}}",
@@ -1665,7 +1665,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "ceil(sum by(pod) (rate(container_fs_reads_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])))",
+                                "expr": "ceil(sum by(pod) (rate(container_fs_reads_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[5m])))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "Reads",
@@ -1673,7 +1673,7 @@ data:
                                 "step": 10
                             },
                             {
-                                "expr": "ceil(sum by(pod) (rate(container_fs_writes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval])))",
+                                "expr": "ceil(sum by(pod) (rate(container_fs_writes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[5m])))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "Writes",
@@ -1762,7 +1762,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum by(pod) (rate(container_fs_reads_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(pod) (rate(container_fs_reads_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[5m]))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "Reads",
@@ -1770,7 +1770,7 @@ data:
                                 "step": 10
                             },
                             {
-                                "expr": "sum by(pod) (rate(container_fs_writes_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(pod) (rate(container_fs_writes_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=~\"$pod\"}[5m]))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "Writes",
@@ -1872,7 +1872,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "ceil(sum by(container) (rate(container_fs_reads_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]) + rate(container_fs_writes_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval])))",
+                                "expr": "ceil(sum by(container) (rate(container_fs_reads_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]) + rate(container_fs_writes_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m])))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}container{{`}}`}}",
@@ -1961,7 +1961,7 @@ data:
                         "steppedLine": false,
                         "targets": [
                             {
-                                "expr": "sum by(container) (rate(container_fs_reads_bytes_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]) + rate(container_fs_writes_bytes_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(container) (rate(container_fs_reads_bytes_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]) + rate(container_fs_writes_bytes_total{container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]))",
                                 "format": "time_series",
                                 "intervalFactor": 2,
                                 "legendFormat": "{{`{{`}}container{{`}}`}}",
@@ -2222,7 +2222,7 @@ data:
                         ],
                         "targets": [
                             {
-                                "expr": "sum by(container) (rate(container_fs_reads_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(container) (rate(container_fs_reads_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]))",
                                 "format": "table",
                                 "instant": true,
                                 "intervalFactor": 2,
@@ -2231,7 +2231,7 @@ data:
                                 "step": 10
                             },
                             {
-                                "expr": "sum by(container) (rate(container_fs_writes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(container) (rate(container_fs_writes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]))",
                                 "format": "table",
                                 "instant": true,
                                 "intervalFactor": 2,
@@ -2240,7 +2240,7 @@ data:
                                 "step": 10
                             },
                             {
-                                "expr": "sum by(container) (rate(container_fs_reads_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]) + rate(container_fs_writes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(container) (rate(container_fs_reads_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]) + rate(container_fs_writes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]))",
                                 "format": "table",
                                 "instant": true,
                                 "intervalFactor": 2,
@@ -2249,7 +2249,7 @@ data:
                                 "step": 10
                             },
                             {
-                                "expr": "sum by(container) (rate(container_fs_reads_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(container) (rate(container_fs_reads_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]))",
                                 "format": "table",
                                 "instant": true,
                                 "intervalFactor": 2,
@@ -2258,7 +2258,7 @@ data:
                                 "step": 10
                             },
                             {
-                                "expr": "sum by(container) (rate(container_fs_writes_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(container) (rate(container_fs_writes_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]))",
                                 "format": "table",
                                 "instant": true,
                                 "intervalFactor": 2,
@@ -2267,7 +2267,7 @@ data:
                                 "step": 10
                             },
                             {
-                                "expr": "sum by(container) (rate(container_fs_reads_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]) + rate(container_fs_writes_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[$__rate_interval]))",
+                                "expr": "sum by(container) (rate(container_fs_reads_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]) + rate(container_fs_writes_bytes_total{device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace=\"$namespace\", pod=\"$pod\"}[5m]))",
                                 "format": "table",
                                 "instant": true,
                                 "intervalFactor": 2,

@@ -1,0 +1,149 @@
+{{- if .Values.events.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: "pf9:prometheus-monhelper"
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - '*'
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - alertmanagers
+  - prometheuses
+  - prometheuses/finalizers
+  - alertmanagers/finalizers
+  - servicemonitors
+  - podmonitors
+  - prometheusrules
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  - deployments
+  - daemonsets
+  verbs:
+  - '*'
+- apiGroups:
+  - ''
+  resources:
+  - configmaps
+  - secrets
+  - events
+  verbs:
+  - '*'
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - list
+  - delete
+- apiGroups:
+  - ''
+  resources:
+  - services
+  - services/finalizers
+  - endpoints
+  verbs:
+  - get
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  verbs:
+  - get
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-monhelper
+  namespace: {{ .Values.events.namespaceOverride }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pf9:prometheus-monhelper
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name:  "pf9:prometheus-monhelper"
+subjects:
+- kind: ServiceAccount
+  name: prometheus-monhelper
+  namespace: {{ .Values.events.namespaceOverride }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monhelper
+  namespace: {{ .Values.events.namespaceOverride }}
+  labels:
+    release: {{ $.Release.Name | quote }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "kube-prometheus-stack.name" . }}-monhelper
+      release: {{ $.Release.Name | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "kube-prometheus-stack.name" . }}-monhelper
+        release: {{ $.Release.Name | quote }}
+    spec:
+      serviceAccount: prometheus-monhelper
+      containers:
+      - args:
+        - --mode=k8s
+        env:
+        - name: K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: platform9/monhelper:v2.0.0
+        imagePullPolicy: IfNotPresent
+        name: monhelper
+        ports:
+        - containerPort: {{ .Values.events.port }}
+          name: {{ .Values.events.portName }}
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 25Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ template "kube-prometheus-stack.name" . }}-monhelper
+    release: {{ $.Release.Name | quote }}
+  name: mon-svc
+  namespace: {{ .Values.events.namespaceOverride }}
+spec:
+  clusterIP: None
+  ports:
+  - name: {{ .Values.events.portName }}
+    port: {{ .Values.events.port }}
+    protocol: TCP
+    targetPort: web
+  selector:
+    app: {{ template "kube-prometheus-stack.name" . }}-monhelper
+    release: {{ $.Release.Name | quote }}
+{{- end }}
