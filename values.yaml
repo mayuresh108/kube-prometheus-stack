@@ -728,9 +728,6 @@ grafana:
         node-exporter:
           url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-node-exporter
           token: ''
-        pvc:
-          url: https://raw.githubusercontent.com/mayuresh108/argocd-repos/master/grafana/grafana-dashboard-pvc
-          token: ''
 
   dashboardProviders:
      dashboardproviders.yaml:

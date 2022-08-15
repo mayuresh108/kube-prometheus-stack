@@ -2519,7 +2519,7 @@ data:
         ]
       },
       "timezone": "{{ .Values.grafana.defaultDashboardsTimezone }}",
-      "title": "pf9-Kubelet",
+      "title": "Kubernetes / Kubelet",
       "uid": "5ePEY6HGk",
       "version": 2
     }

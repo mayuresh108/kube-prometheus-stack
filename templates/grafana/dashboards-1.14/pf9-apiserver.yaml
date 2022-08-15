@@ -77,7 +77,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "up{job=\"apiserver\"}",
+              "expr": "up{job=\"apiserver\", instance=~\"$node\"}",
               "legendFormat": "{{`{{`}}instance{{`}}`}}",
               "refId": "A"
             }
@@ -163,7 +163,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk(15, sum(apiserver_request_duration_seconds_sum{job=\"apiserver\", verb!=\"WATCH\"}) by (verb))",
+              "expr": "topk(15, sum(apiserver_request_duration_seconds_sum{job=\"apiserver\", verb!=\"WATCH\", instance=~\"$node\"}) by (verb))",
               "legendFormat": "{{`{{`}}verb{{`}}`}}",
               "refId": "A"
             }
@@ -249,7 +249,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(apiserver_request_total{job=\"apiserver\",code=~\"[45]..\"}[10m]))",
+              "expr": "sum(rate(apiserver_request_total{job=\"apiserver\",code=~\"[45]..\", instance=~\"$node\"}[10m]))",
               "legendFormat": "Failed request rate",
               "refId": "A"
             }
@@ -335,7 +335,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(apiserver_request_total{job=\"apiserver\",code=~\"2..\"}[10m]))",
+              "expr": "sum(rate(apiserver_request_total{job=\"apiserver\",code=~\"2..\", instance=~\"$node\"}[10m]))",
               "legendFormat": "Successfull request rate",
               "refId": "A"
             }
@@ -422,17 +422,17 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum(rate(workqueue_work_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.95, sum(rate(workqueue_work_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p95",
               "refId": "A"
             },
             {
-              "expr": "histogram_quantile(0.9, sum(rate(workqueue_work_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.9, sum(rate(workqueue_work_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p90",
               "refId": "B"
             },
             {
-              "expr": "histogram_quantile(0.5, sum(rate(workqueue_work_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.5, sum(rate(workqueue_work_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p50",
               "refId": "C"
             }
@@ -519,17 +519,17 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum(rate(workqueue_queue_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.95, sum(rate(workqueue_queue_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p95",
               "refId": "A"
             },
             {
-              "expr": "histogram_quantile(0.90, sum(rate(workqueue_queue_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.90, sum(rate(workqueue_queue_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p90",
               "refId": "B"
             },
             {
-              "expr": "histogram_quantile(0.5, sum(rate(workqueue_queue_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.5, sum(rate(workqueue_queue_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p50",
               "refId": "C"
             }
@@ -616,7 +616,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(apiserver_request_total[10m])) by (verb)",
+              "expr": "sum(rate(apiserver_request_total{instance=~\"$node\"}[10m])) by (verb)",
               "legendFormat": "{{`{{`}}verb{{`}}`}}",
               "refId": "A"
             }
@@ -702,7 +702,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (resource) (rate(apiserver_request_total[10m]))",
+              "expr": "sum by (resource) (rate(apiserver_request_total{instance=~\"$node\"}[10m]))",
               "legendFormat": "{{`{{`}}resource{{`}}`}}",
               "refId": "A"
             }
@@ -790,17 +790,17 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum(rate(apiserver_request_duration_seconds_bucket{verb!~\"CONNECT|WATCH\"}[10m])) by (le))",
+              "expr": "histogram_quantile(0.95, sum(rate(apiserver_request_duration_seconds_bucket{verb!~\"CONNECT|WATCH\", instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p95",
               "refId": "A"
             },
             {
-              "expr": "histogram_quantile(0.90, sum(rate(apiserver_request_duration_seconds_bucket{verb!~\"CONNECT|WATCH\"}[10m])) by (le))",
+              "expr": "histogram_quantile(0.90, sum(rate(apiserver_request_duration_seconds_bucket{verb!~\"CONNECT|WATCH\", instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p90",
               "refId": "B"
             },
             {
-              "expr": "histogram_quantile(0.5, sum(rate(apiserver_request_duration_seconds_bucket{verb!~\"CONNECT|WATCH\"}[10m])) by (le))",
+              "expr": "histogram_quantile(0.5, sum(rate(apiserver_request_duration_seconds_bucket{verb!~\"CONNECT|WATCH\", instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p50 ",
               "refId": "C"
             }
@@ -889,7 +889,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum  by(reason) (aggregator_unavailable_apiservice_count)",
+              "expr": "sum  by(reason) (aggregator_unavailable_apiservice_count{instance=~\"$node\"})",
               "legendFormat": "{{`{{`}}reason{{`}}`}}",
               "refId": "A"
             }
@@ -978,17 +978,17 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum(rate(etcd_request_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.95, sum(rate(etcd_request_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p95",
               "refId": "A"
             },
             {
-              "expr": "histogram_quantile(0.90, sum(rate(etcd_request_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.90, sum(rate(etcd_request_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p90",
               "refId": "B"
             },
             {
-              "expr": "histogram_quantile(0.5, sum(rate(etcd_request_duration_seconds_bucket[10m])) by (le))",
+              "expr": "histogram_quantile(0.5, sum(rate(etcd_request_duration_seconds_bucket{instance=~\"$node\"}[10m])) by (le))",
               "legendFormat": "p50",
               "refId": "C"
             }
@@ -1077,7 +1077,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum  by(verb) (apiserver_request_total{code=~\"5..\",job=\"apiserver\"})",
+              "expr": "sum  by(verb) (apiserver_request_total{code=~\"5..\",job=\"apiserver\", instance=~\"$node\"})",
               "legendFormat": "{{`{{`}}verb{{`}}`}}",
               "refId": "A"
             }
@@ -1147,7 +1147,28 @@ data:
             "regex": "",
             "skipUrlSync": false,
             "type": "datasource"
-          }
+          },
+          {
+            "allValue": null,
+            "datasource": "prometheus",
+            "definition": "label_values(up{job=\"apiserver\"}, instance)",
+            "hide": 0,
+            "includeAll": false,
+            "label": "node",
+            "multi": false,
+            "name": "node",
+            "options": [],
+            "query": "label_values(up{job=\"apiserver\"}, instance)",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 3,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          }          
         ]
       },
       "time": {
@@ -1169,7 +1190,7 @@ data:
         ]
       },
       "timezone": "{{ .Values.grafana.defaultDashboardsTimezone }}",
-      "title": "pf9 Kubernetes apiserver",
+      "title": "Kubernetes / API server",
       "uid": "R6abPf9Zz",
       "version": 3
     }
