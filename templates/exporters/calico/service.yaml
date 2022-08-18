@@ -1,0 +1,35 @@
+{{- if .Values.calico.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    release: {{ $.Release.Name | quote }}
+    k8s-app: calico-node
+  name: {{ template "kube-prometheus-stack.fullname" . }}-felix-metrics-svc
+  namespace: kube-system
+spec:
+  ports:
+  - name: metrics
+    port: 9385
+    protocol: TCP
+    targetPort: 9385
+  selector:
+    k8s-app: calico-node
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    release: {{ $.Release.Name | quote }}
+    k8s-app: calico-typha
+  name: {{ template "kube-prometheus-stack.fullname" . }}-typha-metrics-svc
+  namespace: kube-system
+spec:
+  ports:
+  - name: metrics
+    port: 9386
+    protocol: TCP
+    targetPort: 9386
+  selector:
+    k8s-app: calico-typha
+{{- end }}

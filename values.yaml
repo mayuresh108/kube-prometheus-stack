@@ -918,6 +918,10 @@ grafana:
     #   replacement: $1
     #   action: replace
 
+calico:
+  enabled: true
+  serviceMonitor: {}
+
 events:
   enabled: true
   port: 8080
@@ -2646,7 +2650,7 @@ prometheus:
     #       accessModes: ["ReadWriteOnce"]
     #       resources:
     #         requests:
-    #           storage: 1Gi
+    #           storage: 2Gi
     #    selector: {}
 
     ## Using tmpfs volume

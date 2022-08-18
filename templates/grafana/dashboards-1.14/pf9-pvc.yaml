@@ -1620,7 +1620,7 @@ data:
           "1d"
         ]
       },
-      "timezone": "",
+      "timezone": "{{ .Values.grafana.defaultDashboardsTimezone }}",
       "title": "PV and PVC",
       "uid": "II7dmOIMz",
       "version": 1

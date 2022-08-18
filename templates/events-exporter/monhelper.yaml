@@ -134,7 +134,7 @@ metadata:
   labels:
     app: {{ template "kube-prometheus-stack.name" . }}-monhelper
     release: {{ $.Release.Name | quote }}
-  name: mon-svc
+  name: {{ template "kube-prometheus-stack.name" . }}-mon-svc
   namespace: {{ .Values.events.namespaceOverride }}
 spec:
   clusterIP: None
